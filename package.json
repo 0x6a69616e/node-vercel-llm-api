@@ -1,0 +1,19 @@
+{
+  "name": "vercel-llm-api",
+  "version": "0.3.1",
+  "author": "0x6a69616e",
+  "description": "A reverse engineered Node.js API wrapper for the Vercel AI Playground, which provides free access to many large language models without needing an account.",
+  "main": "index.js",
+  "keywords": [
+    "node",
+    "nodejs",
+    "library",
+    "openai",
+    "vercel",
+    "chatgpt"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.0"
+  }
+}
