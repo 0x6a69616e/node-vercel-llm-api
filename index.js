@@ -1,24 +1,8 @@
 const
   axios = require('axios'),
-  crypto = require('crypto'),
+  { Buffer } = require('buffer'),
   { EventEmitter } = require('events'),
-  { Buffer } = require('buffer');
-
-function atob(data) {
-  return Buffer.from(data, 'base64').toString('binary');
-}
-
-function btoa(data) {
-  return Buffer.from(data, 'binary').toString('base64');
-}
-
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function randomUUID() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c^([...r] = Array.from({length: 16}, () => Math.floor(256 * Math.random())))[0]&15>>c/4).toString(16));
-}
+  { Transform } = require('stream');
 
 function StreamHandler(stream, callback) {
   return new Promise((resolve, reject) => {
@@ -41,13 +25,17 @@ class Client extends EventEmitter {
     this.generate_url = base_url + '/api/prompt';
     this.chat_url = base_url + '/api/generate';
 
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     this.headers = {
       'User-Agent': `Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.${randomInt(0, 9999)}.${randomInt(0, 99)} Safari/537.36`,
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
       'Accept-Encoding': 'gzip, deflate, br',
       'Accept-Language': 'en-US,en;q=0.5',
       Te: 'trailers',
-      'Upgrade-Insecure-Requests': '1',
+      'Upgrade-Insecure-Requests': '1'
     }
 
     this.fetch = async function(resource, options = {}) {
@@ -111,6 +99,14 @@ class Client extends EventEmitter {
 
   async get_token() {
     this.emit('debug', 'Fetching token from ' + this.token_url);
+
+    function atob(data) {
+      return Buffer.from(data, 'base64').toString('binary');
+    }
+    
+    function btoa(data) {
+      return Buffer.from(data, 'binary').toString('base64');
+    }
 
     function toBinary(t) {
       let a = new Uint16Array(t.length);
@@ -190,13 +186,17 @@ class Client extends EventEmitter {
 
     !maxTokens || (set_params.maxTokens = maxTokens);
 
+    function randomUUID() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c^([...[]] = Array.from({length: 16}, () => Math.floor(256 * Math.random())))[0]&15>>c/4).toString(16));
+    }
+
     const
       data = {
         ...set_params,
         messages,
         chatIndex: 0,
         model: model_id,
-        playgroundId: crypto.randomUUID()
+        playgroundId: randomUUID()
       },
       headers = await this.get_headers();
 
@@ -227,7 +227,7 @@ class Client extends EventEmitter {
     }
 
     const s = await this.stream_request('POST', this.generate_url, headers, data);
-    return s.pipe(new stream.Transform({
+    return s.pipe(new Transform({
       transform(chunk, encoding, callback) {
         let modifiedChunk = modifyChunk(chunk);
         callback(null, modifiedChunk);
@@ -236,4 +236,4 @@ class Client extends EventEmitter {
   }
 }
 
-module.exports = { Client };
+module.exports = { Client, StreamHandler };
