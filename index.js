@@ -1,7 +1,16 @@
 const
   axios = require('axios'),
   crypto = require('crypto'),
-  { EventEmitter } = require('events');
+  { EventEmitter } = require('events'),
+  { Buffer } = require('buffer');
+
+function atob(data) {
+  return Buffer.from(data, 'base64').toString('binary');
+}
+
+function btoa(data) {
+  return Buffer.from(data, 'binary').toString('base64');
+}
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
