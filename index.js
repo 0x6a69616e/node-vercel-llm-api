@@ -16,6 +16,19 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function StreamHandler(stream, callback) {
+  return new Promise((resolve, reject) => {
+    let response = [];
+    stream.on('data', chunk => {
+      const res = new TextDecoder().decode(chunk);
+      !callback || callback(res); 
+      response.push(res);
+    });
+    stream.on('end', () => resolve(response));
+    stream.on('error', reject);
+  });
+}
+
 class Client extends EventEmitter {
   constructor(config = {}) {
     super();
