@@ -16,6 +16,10 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function randomUUID() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c^([...r] = Array.from({length: 16}, () => Math.floor(256 * Math.random())))[0]&15>>c/4).toString(16));
+}
+
 function StreamHandler(stream, callback) {
   return new Promise((resolve, reject) => {
     let response = [];
