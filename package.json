@@ -4,6 +4,9 @@
   "author": "0x6a69616e",
   "description": "A reverse engineered Node.js API wrapper for the Vercel AI Playground, which provides free access to many large language models without needing an account.",
   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [
     "node",
     "nodejs",
